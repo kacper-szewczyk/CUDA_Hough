@@ -15,8 +15,6 @@ int* read_from_file(int* image, char* filename, int *n, int *m)
 	char buffer;
 	FILE *file;
 	file = fopen (filename, "rt");  /* open the file for reading */
-	   /* elapsed.dta is the name of the file */
-	   /* "rt" means open the file for reading text */
 	fgets(line, 80, file);	// "P2" line
 	fgets(line, 80, file);	// "#" comment line
 	//fgets(line, 80, file);
