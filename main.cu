@@ -6,11 +6,14 @@ int main(int argc, char ** argv)
 {
 
 	Image *image=readImageFromFile("image.pgm");
+	Image *devImage;
+	Image *devThresholdImage;
+	cudaMalloc((void**)&devImage,sizeof(Image) );
+	cudaMalloc((void**)&devThresholdImage,sizeof(Image) );
+	cudaMemcpy(devImage,image,sizeof(Image),cudaMemcpyHostToDevice);
+	cudaMemcpy(devThresholdImage,image,sizeof(Image),cudaMemcpyHostToDevice);
+	thresholdImage<<<10,10>>>(devImage,devThresholdImage,10);
 /*
-	int *image;
-	int n;
-	int m;
-	image=read_from_file(image,"image.pgm",&n,&m);
 	int *deviceImage;
 	int *deviceThresholdedImage;
         int *thresholdedImage;

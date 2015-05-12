@@ -8,8 +8,7 @@
 #ifndef HOUGH_H_
 #define HOUGH_H_
 #include <iostream>
-
-__global__ void thresholdImage(int *deviceImage,
-		int *deviceThresholdedImage, int *threshold, int *size);
+#include "image.h"
+__global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage, int threshold);
 
 #endif /* HOUGH_H_ */
