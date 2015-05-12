@@ -8,9 +8,10 @@
 #ifndef FILE_H_
 #define FILE_H_
 #include <stdio.h>
+#include "image.h"
 
-
-int* read_from_file(int* image, char* filename, int *n, int *m);
+Image *readImageFromFile( char* filename);
+//int* read_from_file(int* image, char* filename, int *n, int *m);
 
 
 

@@ -1,7 +1,7 @@
 CC=nvcc
 CFLAGS=
 LFLAGS=
-OBJS=main.o file.o hough.o
+OBJS=main.o file.o hough.o image.o
 
 cudaHough: $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o cudaHough
@@ -14,3 +14,9 @@ file.o: file.cu
 
 hough.o: hough.cu
 	$(CC) $(CFLAGS) -c hough.cu -o hough.o
+
+image.o: image.cu
+	$(CC) $(CFLAGS) -c image.cu -o image.o
+
+clean:
+	rm -f *.o

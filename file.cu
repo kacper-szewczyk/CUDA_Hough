@@ -2,14 +2,14 @@
  * file.c
  *
  *  Created on: 28 kwi 2015
- *      Author: kszewcz2
+ *      Author: kszewcz2 mblach
  */
 #include "file.h"
+Image *readImageFromFile( char* filename){
 
-int* read_from_file(int* image, char* filename, int *n, int *m)
-{
-	*n=0;
-	*m=0;
+
+	int width=0;
+	int height=0;
 	int scale=0;
 	char line[80];
 	char buffer;
@@ -17,21 +17,20 @@ int* read_from_file(int* image, char* filename, int *n, int *m)
 	file = fopen (filename, "rt");  /* open the file for reading */
 	fgets(line, 80, file);	// "P2" line
 	fgets(line, 80, file);	// "#" comment line
-	//fgets(line, 80, file);
 	while(buffer=fgetc(file))
 	{
 		if( buffer >=48 && buffer <=57)
-			*n=*n*10+buffer-48;
+			width=width*10+buffer-48;
 		else
-			if(*n!=0) break;
+			if(width!=0) break;
 	}
 	buffer = 0;
 	while(buffer=fgetc(file))
 	{
 		if( buffer >=48 && buffer <=57)
-			*m=*m*10+buffer-48;
+			height=height*10+buffer-48;
 		else
-			if(*m!=0) break;
+			if(height!=0) break;
 	}
 	buffer = 0;
 	while(buffer=fgetc(file))
@@ -41,15 +40,14 @@ int* read_from_file(int* image, char* filename, int *n, int *m)
 		else
 			if(scale!=0) break;
 	}
-	//image = malloc((*m)*(*n)*sizeof(int));
-	image = new int[(*m)*(*n)];
+	int *array = new int[height*width];
 	int i=0;
 	int number=0;
 	while((buffer=fgetc(file)) != EOF)
 	{
 		if( buffer >=48 && buffer <=57)
 		{
-			image[i]=image[i]*10+buffer-48;
+			array[i]=array[i]*10+buffer-48;
 			number=1;
 		}
 		else
@@ -60,5 +58,9 @@ int* read_from_file(int* image, char* filename, int *n, int *m)
 			}
 	}
 	fclose(file);
+	Image * image = new Image();
+	image->setWidth(width);
+	image->setHeight(height);
+	image->setArray(array);
 	return image;
 }

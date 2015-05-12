@@ -4,6 +4,9 @@
 
 int main(int argc, char ** argv)
 {
+
+	Image *image=readImageFromFile("image.pgm");
+/*
 	int *image;
 	int n;
 	int m;
@@ -41,6 +44,6 @@ int main(int argc, char ** argv)
 	for(i=0;i<size;i++)
 	{
 		printf("%d ",thresholdedImage[i]);
-	}	
+	}	*/
 	return 0;
 }
