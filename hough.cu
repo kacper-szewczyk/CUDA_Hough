@@ -1,5 +1,5 @@
 /*
- * hough.c
+ * hough.cu
  *
  *  Created on: 5 maj 2015
  *      Author: kszewcz2
@@ -12,14 +12,100 @@ __global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage,
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
 	int * array=deviceImage->getArray();
-	for(int i=offset;i<deviceImage->getWidth()*deviceImage->getHeight();i+= blockDim.x * gridDim.x){
+	for(int i=offset;i<deviceImage->getWidth()*deviceImage->getHeight();i+= blockDim.x * gridDim.x)
+	{
 		
 		if(array[i]>=threshold)
 			array[i] = 1;
 		else
 			array[i] = 0;
-		offset += blockDim.x * gridDim.x;
+		//offset += blockDim.x * gridDim.x;
 
 	}
 	
+}
+
+__global__ void createRoAndThetaArrays(double *ro, double *theta, double roStepSize, double thetaStepSize, double steps)
+{
+	int x = threadIdx.x + blockIdx.x * blockDim.x;
+	int y = threadIdx.y + blockIdx.y * blockDim.y;
+	int offset = x + y * blockDim.x * gridDim.x;
+	for(int i=offset; i<=steps; i+= blockDim.x * gridDim.x)
+	{
+		ro[i] = roStepSize * offset;
+		theta[i] = thetaStepSize * offset;
+		//offset += blockDim.x * gridDim.x;
+	}
+}
+
+__device__ int findMaxWidth(int i, int width)
+{
+	int result = 0;
+	int summed = 0;
+	while(summed <= i)
+	{
+		summed += width;
+		result++;
+	}
+	if(summed > i)
+	{
+		result--;
+	}
+	return result;
+}
+
+__global__ void houghTransform(Image *deviceThresholdedImage,
+	 double *ro, double *theta, int *A, int R, int T)
+{
+	int x = threadIdx.x + blockIdx.x * blockDim.x;
+	int y = threadIdx.y + blockIdx.y * blockDim.y;
+	int offset = x + y * blockDim.x * gridDim.x;
+	int * array=deviceThresholdedImage->getArray();
+	double roIdeal;
+	double roCandidate;
+	double roClosest;	
+	double difference=9999;
+	int indexI,indexJ;
+	for(int i=offset;i<deviceThresholdedImage->getWidth()
+	*deviceThresholdedImage->getHeight();
+	i+= blockDim.x * gridDim.x)
+	{
+		indexI = findMaxWidth(i,deviceThresholdedImage->getWidth());
+		indexJ = i-indexI*deviceThresholdedImage->getWidth();
+		if(array[i] == 1)
+		{
+			for(int h=0;h<T;h++)
+			{
+				roIdeal = indexI*sin(theta[h])+indexJ*cos(theta[h]);
+				for(int k=0;k<R;k++)
+				{
+					roCandidate = abs(roIdeal - ro[k]); 
+					if(roCandidate<difference)
+					{
+						difference = roCandidate;
+						roClosest = ro[k];
+						A[k*R+h]++;
+					}
+				}
+				difference=9999;
+			}
+		}
+ 
+		offset += blockDim.x * gridDim.x;
+
+	}
+}
+
+__global__ void findLocalMaximas(int *A, int threshold, int *indexes)
+{
+	int x = threadIdx.x + blockIdx.x * blockDim.x;
+	int y = threadIdx.y + blockIdx.y * blockDim.y;
+	int offset = x + y * blockDim.x * gridDim.x;
+	for(int i=offset;i<sizeof(A);i+= blockDim.x * gridDim.x)
+	{
+		if(A[i]>threshold)
+		{
+			indexes[i]=1;
+		}
+	}
 }

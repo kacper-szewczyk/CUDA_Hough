@@ -9,6 +9,16 @@
 #define HOUGH_H_
 #include <iostream>
 #include "image.h"
+
 __global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage, int threshold);
 
+__global__ void createRoAndThetaArrays(double *ro, double *theta, double roMax, double steps);
+
+__device__ int findMaxWidth(int i, int width);
+
+__global__ void houghTransform(Image *deviceThresholdedImage,
+	double *ro, int *A, double *theta, int R, int T); 
+
+__global__ void findLocalMaximas(int *A, int threshold, int *indexes);
+//pMax = sqrt(n^2+m^2); n-height, m-width of the image
 #endif /* HOUGH_H_ */

@@ -1,5 +1,5 @@
 /*
- * file.c
+ * file.cu
  *
  *  Created on: 28 kwi 2015
  *      Author: kszewcz2 mblach
