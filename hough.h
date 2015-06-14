@@ -12,7 +12,7 @@
 
 __global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage, int threshold);
 
-__global__ void createRoAndThetaArrays(double *ro, double *theta, double roMax, double steps);
+__global__ void createRoAndThetaArrays(double *ro, double *theta,  double roStepSize, double thetaStepSize, double steps);
 
 __device__ int findMaxWidth(int i, int width);
 

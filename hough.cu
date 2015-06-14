@@ -67,8 +67,8 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 	double difference=9999;
 	int indexI,indexJ;
 	for(int i=offset;i<deviceThresholdedImage->width
-	*deviceThresholdedImage->height;
-	i+= blockDim.x * gridDim.x)
+		*deviceThresholdedImage->height;
+		i+= blockDim.x * gridDim.x)
 	{
 		indexI = findMaxWidth(i,deviceThresholdedImage->width);
 		indexJ = i-indexI*deviceThresholdedImage->width;

@@ -8,11 +8,20 @@ int main(int argc, char ** argv)
 	Image *image=readImageFromFile("image.pgm");
 	Image *devImage;
 	Image *devThresholdImage;
+	double *ro;
+	double *theta;
+	double steps = 1000;
+	int *A;
 	cudaMalloc((void**)&devImage,sizeof(Image) );
 	cudaMalloc((void**)&devThresholdImage,sizeof(Image) );
+	cudaMalloc((void**)&A,sizeof(int) );
+	cudaMalloc((void**)&ro,sizeof(double)* steps);
+	cudaMalloc((void**)&theta,sizeof(double)* steps);
 	cudaMemcpy(devImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	cudaMemcpy(devThresholdImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	thresholdImage<<<10,10>>>(devImage,devThresholdImage,10);
+	createRoAndThetaArrays<<<10,10>>>(ro, theta, 3.14/steps, 3.14/steps, steps);
+	//houghTransform<<<10,10>>>(devThresholdImage, ro, theta, int *A, int R, int T)
 /*
 	int *deviceImage;
 	int *deviceThresholdedImage;
