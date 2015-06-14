@@ -11,8 +11,8 @@ __global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage,
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
-	int * array=deviceImage->getArray();
-	for(int i=offset;i<deviceImage->getWidth()*deviceImage->getHeight();i+= blockDim.x * gridDim.x)
+	int * array=deviceImage->array;
+	for(int i=offset;i<deviceImage->width*deviceImage->height;i+= blockDim.x * gridDim.x)
 	{
 		
 		if(array[i]>=threshold)
@@ -60,18 +60,18 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
-	int * array=deviceThresholdedImage->getArray();
+	int * array=deviceThresholdedImage->array;
 	double roIdeal;
 	double roCandidate;
 	double roClosest;	
 	double difference=9999;
 	int indexI,indexJ;
-	for(int i=offset;i<deviceThresholdedImage->getWidth()
-	*deviceThresholdedImage->getHeight();
+	for(int i=offset;i<deviceThresholdedImage->width
+	*deviceThresholdedImage->height;
 	i+= blockDim.x * gridDim.x)
 	{
-		indexI = findMaxWidth(i,deviceThresholdedImage->getWidth());
-		indexJ = i-indexI*deviceThresholdedImage->getWidth();
+		indexI = findMaxWidth(i,deviceThresholdedImage->width);
+		indexJ = i-indexI*deviceThresholdedImage->width;
 		if(array[i] == 1)
 		{
 			for(int h=0;h<T;h++)
