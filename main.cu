@@ -1,6 +1,6 @@
 #include "file.h"
 #include "hough.h"
-
+#include "laplace.h"
 
 int main(int argc, char ** argv)
 {
@@ -33,7 +33,9 @@ int main(int argc, char ** argv)
 	cudaMemcpy(devImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	cudaMemcpy(devThresholdImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	printf("End of allocation\n");
-	thresholdImage<<<24,7>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
+	makeLaplaceMask<<<24,7>>>(devImage,
+	 devThresholdImage, size);
+	//thresholdImage<<<24,7>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
 	cudaMemcpy(result,devThresholdImage,sizeof(Image), cudaMemcpyDeviceToHost);
 	cudaMemcpy(B,deviceImage,size2, cudaMemcpyDeviceToHost);
 	for(int i=0;i<size;i++)

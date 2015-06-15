@@ -1,13 +1,16 @@
 CC=nvcc
 CFLAGS=
 LFLAGS=
-OBJS=main.o file.o hough.o image.o
+OBJS=main.o file.o hough.o image.o laplace.o
 
 cudaHough: $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o cudaHough
 
 main.o: main.cu
 	$(CC) $(CFLAGS) -c main.cu -o main.o
+
+laplace.o: laplace.cu
+	$(CC) $(CFLAGS) -c laplace.cu -o laplace.o
 
 file.o: file.cu
 	$(CC) $(CFLAGS) -c file.cu -o file.o
@@ -21,3 +24,4 @@ image.o: image.cu
 clean:
 	rm -f *.o 
 	rm -f cudaHough
+	rm -f *~
