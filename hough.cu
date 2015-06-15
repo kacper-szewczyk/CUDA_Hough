@@ -6,23 +6,22 @@
  */
 #include "hough.h"
 
-__global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage, int threshold)
+__global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int width, int height, int *image)
 {
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
-	int * array=deviceImage->array;
-	deviceThresholdedImage->width = deviceImage->width;
-	deviceThresholdedImage->height = deviceImage->height;
-	deviceThresholdedImage->scale = deviceImage->scale;
-	for(int i=offset;i<deviceImage->width*deviceImage->height;i+= blockDim.x * gridDim.x)
+	image[offset] = 10;
+	for(int i=offset;i<(width*height); i+= blockDim.x * gridDim.x)
 	{
-		if(array[i]>=threshold)
+		image[i] = 5;
+		if(deviceThresholdedImage->array[i]>=threshold)
 			deviceThresholdedImage->array[i] = 1;
 		else
 			deviceThresholdedImage->array[i] = 0;
 		//offset += blockDim.x * gridDim.x;
 	}
+	deviceThresholdedImage->array[offset] = 5;
 }
 
 __global__ void createRoAndThetaArrays(double *ro, double *theta, double roStepSize, double thetaStepSize, double steps)
