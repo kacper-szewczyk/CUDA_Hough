@@ -10,7 +10,7 @@
 #include <iostream>
 #include "image.h"
 
-__global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int width, int height, int *image);
+__global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int n);
 
 __global__ void createRoAndThetaArrays(double *ro, double *theta,  double roStepSize, double thetaStepSize, double steps);
 

@@ -6,15 +6,13 @@
  */
 #include "hough.h"
 
-__global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int width, int height, int *image)
+__global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int n)
 {
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
-	image[offset] = 10;
-	for(int i=offset;i<(width*height); i+= blockDim.x * gridDim.x)
+	for(int i=offset;i<n; i+= blockDim.x * gridDim.x)
 	{
-		image[i] = 5;
 		if(deviceThresholdedImage->array[i]>=threshold)
 			deviceThresholdedImage->array[i] = 1;
 		else

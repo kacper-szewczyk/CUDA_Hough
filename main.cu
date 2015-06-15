@@ -5,8 +5,11 @@
 int main(int argc, char ** argv)
 {
 	int n=1000;
-	Image *image=readImageFromFile("image.pgm");
-	saveImageToFileTest("test.pgm");
+	char inputFile[] = { "image.pgm" };
+	char outputFile[] = { "treshold.pgm" };
+	Image *image=readImageFromFile(inputFile);
+	char testFile[] = { "test.pgm" };
+	saveImageToFileTest(testFile);
 	Image *devImage;
 	Image *devThresholdImage;
 	Image *result = new Image(image->getWidth(),image->getHeight(),image->getScale());
@@ -28,9 +31,9 @@ int main(int argc, char ** argv)
 	cudaMalloc((void**)&ro,sizeof(double)* steps);
 	cudaMalloc((void**)&theta,sizeof(double)* steps);
 	cudaMemcpy(devImage,image,sizeof(Image),cudaMemcpyHostToDevice);
-	//cudaMemcpy(devThresholdImage,image,sizeof(Image),cudaMemcpyHostToDevice);
+	cudaMemcpy(devThresholdImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	printf("End of allocation\n");
-	thresholdImage<<<24,7>>>(devThresholdImage,10,24,7,deviceImage);
+	thresholdImage<<<24,7>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
 	cudaMemcpy(result,devThresholdImage,sizeof(Image), cudaMemcpyDeviceToHost);
 	cudaMemcpy(B,deviceImage,size2, cudaMemcpyDeviceToHost);
 	for(int i=0;i<size;i++)
@@ -38,7 +41,7 @@ int main(int argc, char ** argv)
 		printf("%i ",B[i]);
 	}
 	printf("After treshold\n");
-        saveImageToFile(result,"treshold.pgm");
+        saveImageToFile(result,outputFile);
 	/*createRoAndThetaArrays<<<10,10>>>(ro, theta, 3.14/steps, 3.14/steps, steps);
 	printf("After Ro theta arrays\n");
 	houghTransform<<<10,10>>>(devThresholdImage,
@@ -53,5 +56,15 @@ int main(int argc, char ** argv)
 	result->setArray(indexesHost);
 	printf("After set array\n");
 	saveImageToFile(result,"Houghed.pgm");*/
+	cudaFree(theta);
+	cudaFree(ro);
+	cudaFree(A);
+	cudaFree(devImage);
+	cudaFree(deviceImage);
+	cudaFree(indexes);
+	cudaFree(devThresholdImage);
+	free(image);
+	free(result);
+	free(B);
 	return 0;
 }
