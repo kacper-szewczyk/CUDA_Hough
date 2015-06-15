@@ -8,11 +8,16 @@ int main(int argc, char ** argv)
 	Image *image=readImageFromFile("image.pgm");
 	Image *devImage;
 	Image *devThresholdImage;
+	Image *result = new Image();
 	double *ro;
 	double *theta;
 	double steps = 1000;
 	int *A;
+	int *indexes;
+	int *indexesHost;
+	int size=image->getHeight()*image->getWidth();
 	cudaMalloc((void**)&devImage,sizeof(Image) );
+	cudaMalloc((void**)&indexes,sizeof(int)*size);
 	cudaMalloc((void**)&devThresholdImage,sizeof(Image) );
 	cudaMalloc((void**)&A,sizeof(int) );
 	cudaMalloc((void**)&ro,sizeof(double)* steps);
@@ -21,6 +26,15 @@ int main(int argc, char ** argv)
 	cudaMemcpy(devThresholdImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	thresholdImage<<<10,10>>>(devImage,devThresholdImage,10);
 	createRoAndThetaArrays<<<10,10>>>(ro, theta, 3.14/steps, 3.14/steps, steps);
+	houghTransform<<<10,10>>>(devThresholdImage,
+	 ro, theta, A, 100, 100);
+	findLocalMaximas<<<10,10>>>(A, 5, indexes);
+	cudaMemcpy(result,devThresholdImage,sizeof(Image),cudaMemcpyDeviceToHost);
+	cudaMemcpy(indexesHost,indexes,sizeof(int)
+		*image->getHeight()*image->getWidth(),
+		cudaMemcpyDeviceToHost);
+	result->setArray(indexesHost);
+	saveImageToFile(result,"Houghed.pgm");
 	//houghTransform<<<10,10>>>(devThresholdImage, ro, theta, int *A, int R, int T)
 /*
 	int *deviceImage;

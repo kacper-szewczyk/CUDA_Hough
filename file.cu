@@ -62,5 +62,28 @@ Image *readImageFromFile( char* filename){
 	image->setWidth(width);
 	image->setHeight(height);
 	image->setArray(array);
+	image->setScale(scale);
 	return image;
+}
+
+void saveImageToFile(Image *result,char* filename)
+{
+	FILE *file;
+	file = fopen (filename, "w");  /* open the file for reading */
+	fprintf(file,"P2\n");
+	fprintf(file,"# result of Hough transform\n");
+	fprintf(file,"%i",result->getWidth());
+	fprintf(file," %i\n",result->getHeight());
+	fprintf(file,"%i\n",result->getScale());
+	int* array = result->getArray();
+	int width = result->getWidth();
+	for(int i=0;i<result->getHeight();i++)
+	{
+		for(int j=0;j<width;j++)
+		{
+			fprintf(file,"%i ",array[i*width+j]);
+		}
+		fprintf(file,"\n");
+	}
+	fclose(file);
 }

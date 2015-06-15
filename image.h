@@ -8,6 +8,7 @@ class Image
 	int width;
 	int height;
 	int *array;
+	int scale;
 	int getWidth() const {
 		return width;
 	}
@@ -16,6 +17,9 @@ class Image
 	}
 	int * getArray(){
 		return array;
+	}
+	int getScale() const {
+		return scale;
 	}
 	void setArray(int * array){
 		this->array=array;
@@ -26,7 +30,9 @@ class Image
 	void setHeight(int height){
 		this->height=height;
 	}
-
+	void setScale(int scale){
+		this->scale=scale;
+	}
 
 
 };

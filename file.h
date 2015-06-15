@@ -13,6 +13,7 @@
 Image *readImageFromFile( char* filename);
 //int* read_from_file(int* image, char* filename, int *n, int *m);
 
+void saveImageToFile(Image *result,char* filename);
 
 
 #endif /* FILE_H_ */
