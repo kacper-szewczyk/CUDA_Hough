@@ -12,17 +12,17 @@ __global__ void thresholdImage(Image *deviceImage,Image *deviceThresholdedImage,
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
 	int * array=deviceImage->array;
+	deviceThresholdedImage->width = deviceImage->width;
+	deviceThresholdedImage->height = deviceImage->height;
+	deviceThresholdedImage->scale = deviceImage->scale;
 	for(int i=offset;i<deviceImage->width*deviceImage->height;i+= blockDim.x * gridDim.x)
 	{
-		
 		if(array[i]>=threshold)
-			array[i] = 1;
+			deviceThresholdedImage->array[i] = 1;
 		else
-			array[i] = 0;
+			deviceThresholdedImage->array[i] = 0;
 		//offset += blockDim.x * gridDim.x;
-
 	}
-	
 }
 
 __global__ void createRoAndThetaArrays(double *ro, double *theta, double roStepSize, double thetaStepSize, double steps)
@@ -66,12 +66,13 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 	double roClosest;	
 	double difference=9999;
 	int indexI,indexJ;
-	for(int i=offset;i<deviceThresholdedImage->width
+	int width = deviceThresholdedImage->width;
+	for(int i=offset;i<width
 		*deviceThresholdedImage->height;
 		i+= blockDim.x * gridDim.x)
 	{
-		indexI = findMaxWidth(i,deviceThresholdedImage->width);
-		indexJ = i-indexI*deviceThresholdedImage->width;
+		indexI = findMaxWidth(i,width);
+		indexJ = i-indexI*width;
 		if(array[i] == 1)
 		{
 			for(int h=0;h<T;h++)

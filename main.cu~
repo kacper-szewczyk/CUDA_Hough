@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
 	printf("Hough\n");
 	findLocalMaximas<<<10,10>>>(A, 5, indexes);
 	printf("Local Maximas\n");
-	cudaMemcpy(result,devImage,sizeof(Image), cudaMemcpyDeviceToHost);
+	cudaMemcpy(result,devImage,sizeof(Image),cudaMemcpyDeviceToHost);
 	cudaMemcpy(indexesHost,indexes,sizeof(int)
 		*image->getHeight()*image->getWidth(),
 		cudaMemcpyDeviceToHost);

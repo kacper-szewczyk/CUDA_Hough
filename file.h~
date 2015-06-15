@@ -15,5 +15,5 @@ Image *readImageFromFile( char* filename);
 
 void saveImageToFile(Image *result,char* filename);
 
-void saveImageToFileTest(char* filename);
+
 #endif /* FILE_H_ */

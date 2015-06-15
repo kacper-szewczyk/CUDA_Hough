@@ -77,6 +77,8 @@ void saveImageToFile(Image *result,char* filename)
 	fprintf(file,"%i\n",result->getScale());
 	int* array = result->getArray();
 	int width = result->getWidth();
+	printf("width %i\n",width);
+	printf("heigth %i\n",result->getHeight());
 	for(int i=0;i<result->getHeight();i++)
 	{
 		for(int j=0;j<width;j++)
@@ -85,5 +87,16 @@ void saveImageToFile(Image *result,char* filename)
 		}
 		fprintf(file,"\n");
 	}
+	fclose(file);
+}
+
+void saveImageToFileTest(char* filename)
+{
+	FILE *file;
+	file = fopen (filename, "w");  /* open the file for reading */
+	fprintf(file,"P2\n");
+	fprintf(file,"# result of Hough transform\n");
+	fprintf(file,"Ty luju\n");
+	
 	fclose(file);
 }

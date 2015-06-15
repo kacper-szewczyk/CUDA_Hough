@@ -20,4 +20,4 @@ image.o: image.cu
 
 clean:
 	rm -f *.o 
-	rm -f cudaHough
+	rm cudaHough
