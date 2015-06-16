@@ -19,6 +19,6 @@ __device__ int findMaxWidth(int i, int width);
 __global__ void houghTransform(Image *deviceThresholdedImage,
 	double *ro, double *theta, int *A, int R, int T); 
 
-__global__ void findLocalMaximas(int *A, int threshold, int *indexes);
+__global__ void findLocalMaximas(int *A, int threshold, int *indexes, int size);
 //pMax = sqrt(n^2+m^2); n-height, m-width of the image
 #endif /* HOUGH_H_ */

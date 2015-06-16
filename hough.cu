@@ -8,30 +8,43 @@
 
 __global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int n)
 {
-	int x = threadIdx.x + blockIdx.x * blockDim.x;
-	int y = threadIdx.y + blockIdx.y * blockDim.y;
-	int offset = x + y * blockDim.x * gridDim.x;
+	int offset = threadIdx.x + blockIdx.x * blockDim.x;	
+	/*	
 	for(int i=offset;i<n; i+= blockDim.x * gridDim.x)
 	{
 		if(deviceThresholdedImage->array[i]>=threshold)
 			deviceThresholdedImage->array[i] = 1;
 		else
 			deviceThresholdedImage->array[i] = 0;
-		//offset += blockDim.x * gridDim.x;
+		offset += blockDim.x * gridDim.x;
+	}*/
+	while(offset < n)	
+	//for(int i=offset;i<n; i+= blockDim.x * gridDim.x)
+	{
+		if(deviceThresholdedImage->array[offset]>=threshold)
+			deviceThresholdedImage->array[offset] = 1;
+		else
+			deviceThresholdedImage->array[offset] = 0;
+		offset += blockDim.x * gridDim.x;
 	}
 	//deviceThresholdedImage->array[offset] = 5;
 }
 
 __global__ void createRoAndThetaArrays(double *ro, double *theta, double roStepSize, double thetaStepSize, double steps)
 {
-	int x = threadIdx.x + blockIdx.x * blockDim.x;
-	int y = threadIdx.y + blockIdx.y * blockDim.y;
-	int offset = x + y * blockDim.x * gridDim.x;
+	int offset = threadIdx.x + blockIdx.x * blockDim.x;
+	/*
 	for(int i=offset; i<=steps; i+= blockDim.x * gridDim.x)
 	{
-		ro[i] = roStepSize * offset;
-		theta[i] = thetaStepSize * offset;
-		//offset += blockDim.x * gridDim.x;
+		ro[i] = roStepSize * i;
+		theta[i] = thetaStepSize * i;
+		offset += blockDim.x * gridDim.x;
+	}*/
+	while(offset < steps)	
+	{
+		ro[offset] = roStepSize * offset;
+		theta[offset] = thetaStepSize * offset;
+		offset += blockDim.x * gridDim.x;
 	}
 }
 
@@ -54,9 +67,7 @@ __device__ int findMaxWidth(int i, int width)
 __global__ void houghTransform(Image *deviceThresholdedImage,
 	 double *ro, double *theta, int *A, int R, int T)
 {
-	int x = threadIdx.x + blockIdx.x * blockDim.x;
-	int y = threadIdx.y + blockIdx.y * blockDim.y;
-	int offset = x + y * blockDim.x * gridDim.x;
+	int offset = threadIdx.x + blockIdx.x * blockDim.x;
 	int * array=deviceThresholdedImage->array;
 	double roIdeal;
 	double roCandidate;
@@ -64,13 +75,11 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 	double difference=9999;
 	int indexI,indexJ;
 	int width = deviceThresholdedImage->width;
-	for(int i=offset;i<width
-		*deviceThresholdedImage->height;
-		i+= blockDim.x * gridDim.x)
+	while(offset < width*deviceThresholdedImage->height)
 	{
-		indexI = findMaxWidth(i,width);
-		indexJ = i-indexI*width;
-		if(array[i] == 1)
+		indexI = findMaxWidth(offset,width);
+		indexJ = offset-indexI*width;
+		if(array[offset] == 1)
 		{
 			for(int h=0;h<T;h++)
 			{
@@ -94,16 +103,15 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 	}
 }
 
-__global__ void findLocalMaximas(int *A, int threshold, int *indexes)
+__global__ void findLocalMaximas(int *A, int threshold, int *indexes, int size)
 {
-	int x = threadIdx.x + blockIdx.x * blockDim.x;
-	int y = threadIdx.y + blockIdx.y * blockDim.y;
-	int offset = x + y * blockDim.x * gridDim.x;
-	for(int i=offset;i<sizeof(A);i+= blockDim.x * gridDim.x)
+	int offset = threadIdx.x + blockIdx.x * blockDim.x;
+	while(offset < size)
 	{
-		if(A[i]>threshold)
+		if(A[offset]>threshold)
 		{
-			indexes[i]=1;
+			indexes[offset]=1;
 		}
+		offset += blockDim.x * gridDim.x;
 	}
 }
