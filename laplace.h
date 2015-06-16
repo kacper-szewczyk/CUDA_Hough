@@ -9,8 +9,9 @@
 #define LAPLACE_H_
 #include "image.h"
 
-__device__ double laplaceMaskOnSector(Image *originalImage, int index, int width, int height);
+__device__ int laplaceMaskOnSector(int *originalImage, int index, int width, int height);
 
-__global__ void makeLaplaceMask(Image *originalImage, Image *image, int n);
+__global__ void makeLaplaceMask(int *originalImage,
+	 int *image, int n, int width, int height);
 
 #endif
