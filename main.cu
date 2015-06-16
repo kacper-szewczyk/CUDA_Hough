@@ -4,6 +4,7 @@
 
 int main(int argc, char ** argv)
 {
+<<<<<<< HEAD
 	char inputFile[] = { "mountain.pgm" };
 	char resultFile[] = { "Houghed.pgm" };
 	Image *image=readImageFromFile(inputFile);
@@ -53,11 +54,27 @@ int main(int argc, char ** argv)
 	//saveImageToFile(result,resultFile);
 	/*
 	int n=1000;
+=======
+
+	Image *image=readImageFromFile("mountain.pgm");
+	for(int i=0;i<10;i++)
+	{
+		for(int j=0;j<10;j++)
+		{
+			image->getArray()[i];
+		}
+	}
+	/*int n=1000;
+>>>>>>> ec5918de9505894795af882336c67e797ff38e0d
 	char inputFile[] = { "mountain.pgm" };
 	char outputFile[] = { "treshold.pgm" };
 	char resultFile[] = { "Houghed.pgm" };
 	Image *image=readImageFromFile(inputFile);
+<<<<<<< HEAD
 	/*char testFile[] = { "test.pgm" };
+=======
+	char testFile[] = { "test.pgm" };
+>>>>>>> ec5918de9505894795af882336c67e797ff38e0d
 	saveImageToFileTest(testFile);
 	Image *devImage;
 	Image *devThresholdImage;
@@ -84,11 +101,18 @@ int main(int argc, char ** argv)
 	cudaMemcpy(devImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	cudaMemcpy(devThresholdImage,result,sizeof(Image),cudaMemcpyHostToDevice);
 	printf("End of allocation\n");
+<<<<<<< HEAD
 	//makeLaplaceMask<<<blocks,threads>>>(devImage,
 	// devThresholdImage, size);
 	thresholdImage<<<blocks,threads>>>(deviceImage,devThresholdImage->getScale()/2,size);
 	int *imageTres = new int[size];
 	cudaMemcpy(imageTres,devThresholdImage,sizeof(Image), cudaMemcpyDeviceToHost);
+=======
+	makeLaplaceMask<<<blocks,threads>>>(devImage,devThresholdImage, size);
+	thresholdImage<<<blocks,threads>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
+	cudaMemcpy(result,devThresholdImage,sizeof(Image), cudaMemcpyDeviceToHost);
+	cudaMemcpy(B,deviceImage,size2, cudaMemcpyDeviceToHost);
+>>>>>>> ec5918de9505894795af882336c67e797ff38e0d
 	for(int i=0;i<size;i++)
 	{
 		printf("%d ",imageTres[i]);
@@ -126,6 +150,10 @@ int main(int argc, char ** argv)
 	cudaFree(devThresholdImage);
 	free(image);
 	free(result);
+<<<<<<< HEAD
 	//free(B);*/
+=======
+	free(B);*/
+>>>>>>> ec5918de9505894795af882336c67e797ff38e0d
 	return 0;
 }
