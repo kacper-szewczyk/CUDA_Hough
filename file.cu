@@ -94,7 +94,7 @@ void saveImageToFileTest(char* filename)
 	file = fopen (filename, "w");  /* open the file for reading */
 	fprintf(file,"P2\n");
 	fprintf(file,"# result of Hough transform\n");
-	fprintf(file,"Ty luju\n");
+	fprintf(file,"Test\n");
 	
 	fclose(file);
 }

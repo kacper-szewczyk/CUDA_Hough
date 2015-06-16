@@ -60,7 +60,7 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 	int * array=deviceThresholdedImage->array;
 	double roIdeal;
 	double roCandidate;
-	double roClosest;	
+	int kRoClosest;	
 	double difference=9999;
 	int indexI,indexJ;
 	int width = deviceThresholdedImage->width;
@@ -81,10 +81,10 @@ __global__ void houghTransform(Image *deviceThresholdedImage,
 					if(roCandidate<difference)
 					{
 						difference = roCandidate;
-						roClosest = ro[k];
-						A[k*R+h]++;
+						kRoClosest = k;
 					}
 				}
+				A[kRoClosest*R+h]++;
 				difference=9999;
 			}
 		}
