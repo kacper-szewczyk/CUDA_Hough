@@ -50,5 +50,5 @@ __global__ void makeLaplaceMask(Image *originalImage,
 		
 		image->array[i] = (int)laplaceMaskOnSector(originalImage, i, width, height);
 	}
-	 __syncthreads();
+	//__syncthreads();
 }

@@ -19,7 +19,7 @@ __global__ void thresholdImage(Image *deviceThresholdedImage, int threshold, int
 			deviceThresholdedImage->array[i] = 0;
 		//offset += blockDim.x * gridDim.x;
 	}
-	deviceThresholdedImage->array[offset] = 5;
+	//deviceThresholdedImage->array[offset] = 5;
 }
 
 __global__ void createRoAndThetaArrays(double *ro, double *theta, double roStepSize, double thetaStepSize, double steps)

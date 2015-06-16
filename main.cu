@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
 	printf("End of allocation\n");
 	makeLaplaceMask<<<24,7>>>(devImage,
 	 devThresholdImage, size);
-	//thresholdImage<<<24,7>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
+	thresholdImage<<<24,7>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
 	cudaMemcpy(result,devThresholdImage,sizeof(Image), cudaMemcpyDeviceToHost);
 	cudaMemcpy(B,deviceImage,size2, cudaMemcpyDeviceToHost);
 	for(int i=0;i<size;i++)
