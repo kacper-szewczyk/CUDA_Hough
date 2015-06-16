@@ -4,13 +4,22 @@
 
 int main(int argc, char ** argv)
 {
-	int n=1000;
+
+	Image *image=readImageFromFile("mountain.pgm");
+	for(int i=0;i<10;i++)
+	{
+		for(int j=0;j<10;j++)
+		{
+			image->getArray()[i];
+		}
+	}
+	/*int n=1000;
 	char inputFile[] = { "mountain.pgm" };
 	char outputFile[] = { "treshold.pgm" };
 	char resultFile[] = { "Houghed.pgm" };
 	Image *image=readImageFromFile(inputFile);
-	/*char testFile[] = { "test.pgm" };
-	saveImageToFileTest(testFile);*/
+	char testFile[] = { "test.pgm" };
+	saveImageToFileTest(testFile);
 	Image *devImage;
 	Image *devThresholdImage;
 	Image *result = new Image(image->getWidth(),image->getHeight(),image->getScale());
@@ -36,8 +45,7 @@ int main(int argc, char ** argv)
 	cudaMemcpy(devImage,image,sizeof(Image),cudaMemcpyHostToDevice);
 	cudaMemcpy(devThresholdImage,result,sizeof(Image),cudaMemcpyHostToDevice);
 	printf("End of allocation\n");
-	makeLaplaceMask<<<blocks,threads>>>(devImage,
-	 devThresholdImage, size);
+	makeLaplaceMask<<<blocks,threads>>>(devImage,devThresholdImage, size);
 	thresholdImage<<<blocks,threads>>>(devThresholdImage,devThresholdImage->getScale()/2,size);
 	cudaMemcpy(result,devThresholdImage,sizeof(Image), cudaMemcpyDeviceToHost);
 	cudaMemcpy(B,deviceImage,size2, cudaMemcpyDeviceToHost);
@@ -72,6 +80,6 @@ int main(int argc, char ** argv)
 	cudaFree(devThresholdImage);
 	free(image);
 	free(result);
-	free(B);
+	free(B);*/
 	return 0;
 }
